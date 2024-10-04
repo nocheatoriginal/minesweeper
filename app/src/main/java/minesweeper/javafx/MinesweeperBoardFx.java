@@ -15,6 +15,9 @@ import minesweeper.javafx.viewmodel.MinesweeperViewmodel;
 import minesweeper.provider.MinesweeperBoard;
 import minesweeper.provider.MinesweeperTile;
 
+/**
+ * The Minesweeper board.
+ */
 public class MinesweeperBoardFx extends Pane implements ChangeListener<MinesweeperBoard> {
   private MinesweeperBoard internalBoard;
   private MinesweeperCellFx[][] cells;
@@ -22,6 +25,11 @@ public class MinesweeperBoardFx extends Pane implements ChangeListener<Minesweep
   private HBox topbar;
   private Label status;
 
+  /**
+   * Creates a new Minesweeper board.
+   *
+   * @param viewModel The viewmodel.
+   */
   public MinesweeperBoardFx(MinesweeperViewmodel viewModel) {
     super();
     this.viewModel = viewModel;
@@ -54,11 +62,16 @@ public class MinesweeperBoardFx extends Pane implements ChangeListener<Minesweep
     this.setBackground(Background.fill(MinesweeperConfig.BACKGROUND_COLOR));
   }
 
+  /**
+   * Initialize the top bar.
+   */
   private void initTopbar() {
-    Font minesweeperfont = Font.loadFont(getClass().getResourceAsStream("/fonts/mine-sweeper.ttf"), 20);
+    Font minesweeperfont = Font.loadFont(getClass()
+        .getResourceAsStream("/fonts/mine-sweeper.ttf"), 20);
     status = new Label();
     status.textProperty().bindBidirectional(viewModel.statusProperty());
     status.setFont(minesweeperfont);
+    status.setTextFill(MinesweeperConfig.STATUS_COLOR);
     topbar.getChildren().addAll(status);
     topbar.setAlignment(javafx.geometry.Pos.CENTER);
   }
@@ -96,8 +109,16 @@ public class MinesweeperBoardFx extends Pane implements ChangeListener<Minesweep
     }
   }
 
+  /**
+   * Update a cell.
+   *
+   * @param tile   The new tile.
+   * @param row    The row of the cell.
+   * @param column The column of the cell.
+   */
   private void updateCell(MinesweeperTile tile, int row, int column) {
     MinesweeperTile cell = cells[row][column].getCell();
+    // TODO: Fix this! -> Flag is not updated
     //if (cell != tile) {
     cells[row][column].setCell(tile);
     //}

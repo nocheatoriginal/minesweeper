@@ -1,12 +1,18 @@
 package minesweeper.provider;
 
+import java.util.Random;
 import minesweeper.config.MinesweeperConfig;
 
-import java.util.Random;
-
+/**
+ * Minesweeper board class.
+ */
 public class MinesweeperBoard {
   private final int size;
   private MinesweeperTile[][] tiles;
+
+  /**
+   * Creates a new Minesweeper board.
+   */
   public MinesweeperBoard() {
     size = MinesweeperConfig.MAP_SIZE;
     tiles = new MinesweeperTile[size][size];
@@ -17,6 +23,9 @@ public class MinesweeperBoard {
     return size;
   }
 
+  /**
+   * Resets the board.
+   */
   public void reset() {
     for (int i = 0; i < MinesweeperConfig.MAP_SIZE; i++) {
       for (int j = 0; j < MinesweeperConfig.MAP_SIZE; j++) {
@@ -33,6 +42,11 @@ public class MinesweeperBoard {
     tiles[row][column] = tile;
   }
 
+  /**
+   * Generates a random board.
+   *
+   * @return The random board.
+   */
   public static MinesweeperBoard generateRandom() {
     MinesweeperBoard randomBoard = new MinesweeperBoard();
 
@@ -41,7 +55,8 @@ public class MinesweeperBoard {
     Random random = new Random();
 
     for (int i = 0; i < bombs; i++) {
-      int row, col;
+      int row;
+      int col;
       do {
         row = random.nextInt(size);
         col = random.nextInt(size);
@@ -56,7 +71,8 @@ public class MinesweeperBoard {
             for (int dy = -1; dy <= 1; dy++) {
               int newRow = i + dx;
               int newCol = j + dy;
-              if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size && randomBoard.getCell(newRow, newCol) == MinesweeperTile.BOMB) {
+              if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size
+                  && randomBoard.getCell(newRow, newCol) == MinesweeperTile.BOMB) {
                 count++;
               }
             }
@@ -80,10 +96,22 @@ public class MinesweeperBoard {
     }
 
     int i = size - 1;
-    if ((randomBoard.getCell(0, 0) == MinesweeperTile.BOMB && randomBoard.getCell(0, 1) == MinesweeperTile.BOMB && randomBoard.getCell(1, 0) == MinesweeperTile.BOMB  && randomBoard.getCell(1, 1) == MinesweeperTile.BOMB) ||
-        (randomBoard.getCell(i, 0) == MinesweeperTile.BOMB && randomBoard.getCell(i - 1, 0) == MinesweeperTile.BOMB && randomBoard.getCell(i, 1) == MinesweeperTile.BOMB && randomBoard.getCell(i - 1, 1) == MinesweeperTile.BOMB) ||
-        (randomBoard.getCell(0, i) == MinesweeperTile.BOMB && randomBoard.getCell(0, i - 1) == MinesweeperTile.BOMB && randomBoard.getCell(1, i) == MinesweeperTile.BOMB && randomBoard.getCell(1, i - 1) == MinesweeperTile.BOMB) ||
-        (randomBoard.getCell(i, i) == MinesweeperTile.BOMB && randomBoard.getCell(i - 1, i) == MinesweeperTile.BOMB && randomBoard.getCell(i, i - 1) == MinesweeperTile.BOMB && randomBoard.getCell(i - 1, i - 1) == MinesweeperTile.BOMB)) {
+    if ((randomBoard.getCell(0, 0) == MinesweeperTile.BOMB
+        && randomBoard.getCell(0, 1) == MinesweeperTile.BOMB
+        && randomBoard.getCell(1, 0) == MinesweeperTile.BOMB
+        && randomBoard.getCell(1, 1) == MinesweeperTile.BOMB)
+        || (randomBoard.getCell(i, 0) == MinesweeperTile.BOMB
+        && randomBoard.getCell(i - 1, 0) == MinesweeperTile.BOMB
+        && randomBoard.getCell(i, 1) == MinesweeperTile.BOMB
+        && randomBoard.getCell(i - 1, 1) == MinesweeperTile.BOMB)
+        || (randomBoard.getCell(0, i) == MinesweeperTile.BOMB
+        && randomBoard.getCell(0, i - 1) == MinesweeperTile.BOMB
+        && randomBoard.getCell(1, i) == MinesweeperTile.BOMB
+        && randomBoard.getCell(1, i - 1) == MinesweeperTile.BOMB)
+        || (randomBoard.getCell(i, i) == MinesweeperTile.BOMB
+        && randomBoard.getCell(i - 1, i) == MinesweeperTile.BOMB
+        && randomBoard.getCell(i, i - 1) == MinesweeperTile.BOMB
+        && randomBoard.getCell(i - 1, i - 1) == MinesweeperTile.BOMB)) {
       randomBoard = MinesweeperBoard.generateRandom();
     }
 

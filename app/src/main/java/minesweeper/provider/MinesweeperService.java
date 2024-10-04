@@ -1,16 +1,20 @@
 package minesweeper.provider;
 
-import minesweeper.config.MinesweeperConfig;
-import minesweeper.config.MinesweeperListener;
-
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 import java.util.function.Consumer;
 
+import minesweeper.config.MinesweeperConfig;
+import minesweeper.config.MinesweeperListener;
+
+/**
+ * Minesweeper service class.
+ */
 public class MinesweeperService {
-  private List<MinesweeperListener> listeners;
+  private final List<MinesweeperListener> listeners;
   private MinesweeperBoard map = new MinesweeperBoard();
   private MinesweeperBoard board;
   private MinesweeperBoard backup;
@@ -25,6 +29,9 @@ public class MinesweeperService {
     this.reset();
   }
 
+  /**
+   * Resets the game.
+   */
   public void reset() {
     this.map = MinesweeperBoard.generateRandom();
     board = new MinesweeperBoard();
@@ -36,22 +43,26 @@ public class MinesweeperService {
     firstMove = MinesweeperConfig.NO_GUESSING_MODE;
     boolean foundStart = !firstMove;
     Random random = new Random();
-    while (!foundStart)
-    {
+    while (!foundStart) {
       int row = random.nextInt(board.getSize());
       int col = random.nextInt(board.getSize());
 
-      if (map.getCell(row, col) == MinesweeperTile.OPEN)
-      {
+      if (map.getCell(row, col) == MinesweeperTile.OPEN) {
         board.setCell(row, col, MinesweeperTile.START);
         foundStart = true;
       }
     }
-    status = firstMove ? "Select the green X to start!" : countFlags + "/" + MinesweeperConfig.BOMB_COUNT;
+    status = firstMove ? "Select the green X to start!" :
+        countFlags + "/" + MinesweeperConfig.BOMB_COUNT;
     notifyListeners(listener -> listener.updateStatus(status));
     notifyListeners(listener -> listener.updateBoard(board));
   }
 
+  /**
+   * Adds a listener.
+   *
+   * @param listener The listener to add.
+   */
   public void addListener(MinesweeperListener listener) {
     if (listeners.contains(listener)) {
       return;
@@ -78,6 +89,12 @@ public class MinesweeperService {
     return status;
   }
 
+  /**
+   * Opens a cell.
+   *
+   * @param row    The row of the cell.
+   * @param column The column of the cell.
+   */
   public void open(int row, int column) {
     if (gameOver) {
       if (board.getCell(row, column) == MinesweeperTile.BOMBSELECTED) {
@@ -101,9 +118,10 @@ public class MinesweeperService {
       return;
     }
 
-    if (board.getCell(row, column) != MinesweeperTile.CLOSED &&
-        board.getCell(row, column) != MinesweeperTile.START) {
-         return;
+    if (board.getCell(row, column) != MinesweeperTile.CLOSED
+        && board.getCell(row, column) != MinesweeperTile.START) {
+      uncoverIfFlagged(row, column);
+      return;
     }
 
     status = countFlags + "/" + MinesweeperConfig.BOMB_COUNT;
@@ -131,14 +149,167 @@ public class MinesweeperService {
     return row < 0 || row >= board.getSize() || column < 0 || column >= board.getSize();
   }
 
+  private void uncoverIfFlagged(int row, int column) {
+    if (outOfBounds(row, column)) {
+      return;
+    }
+
+    ArrayList<Vector<Integer>> illegal = new ArrayList<Vector<Integer>>();
+    int countFlags = 0;
+    int countBombs = 0;
+
+    if (!outOfBounds(row - 1, column)) {
+      if (map.getCell(row - 1, column) == MinesweeperTile.BOMB) {
+        countBombs++;
+        if (board.getCell(row - 1, column) == MinesweeperTile.FLAG) {
+          countFlags++;
+        } else {
+          Vector<Integer> v = new Vector<Integer>();
+          v.add(row - 1);
+          v.add(column);
+          illegal.add(v);
+        }
+      } else if (board.getCell(row - 1, column) == MinesweeperTile.FLAG) {
+        countFlags++;
+      }
+    }
+
+    if (!outOfBounds(row + 1, column) ) {
+      if (map.getCell(row + 1, column) == MinesweeperTile.BOMB) {
+        countBombs++;
+        if (board.getCell(row + 1, column) == MinesweeperTile.FLAG) {
+          countFlags++;
+        } else {
+          Vector<Integer> v = new Vector<Integer>();
+          v.add(row + 1);
+          v.add(column);
+          illegal.add(v);
+        }
+      } else if (board.getCell(row + 1, column) == MinesweeperTile.FLAG) {
+        countFlags++;
+      }
+    }
+
+    if (!outOfBounds(row, column - 1) ){
+      if (map.getCell(row, column - 1) == MinesweeperTile.BOMB) {
+        countBombs++;
+        if (board.getCell(row, column - 1) == MinesweeperTile.FLAG) {
+          countFlags++;
+        } else {
+          Vector<Integer> v = new Vector<Integer>();
+          v.add(row);
+          v.add(column - 1);
+          illegal.add(v);
+        }
+      } else if (board.getCell(row, column - 1) == MinesweeperTile.FLAG) {
+        countFlags++;
+      }
+    }
+
+    if (!outOfBounds(row, column + 1) ){
+      if (map.getCell(row, column + 1) == MinesweeperTile.BOMB) {
+        countBombs++;
+        if (board.getCell(row, column + 1) == MinesweeperTile.FLAG) {
+          countFlags++;
+        } else {
+          Vector<Integer> v = new Vector<Integer>();
+          v.add(row);
+          v.add(column + 1);
+          illegal.add(v);
+        }
+      } else if (board.getCell(row, column + 1) == MinesweeperTile.FLAG) {
+        countFlags++;
+      }
+    }
+
+    if (!outOfBounds(row - 1, column - 1) ){
+      if (map.getCell(row - 1, column - 1) == MinesweeperTile.BOMB) {
+        countBombs++;
+        if (board.getCell(row - 1, column - 1) == MinesweeperTile.FLAG) {
+          countFlags++;
+        } else {
+          Vector<Integer> v = new Vector<Integer>();
+          v.add(row - 1);
+          v.add(column - 1);
+          illegal.add(v);
+        }
+      } else if (board.getCell(row - 1, column - 1) == MinesweeperTile.FLAG) {
+        countFlags++;
+      }
+    }
+
+    if (!outOfBounds(row + 1, column - 1) ){
+      if (map.getCell(row + 1, column - 1) == MinesweeperTile.BOMB) {
+        countBombs++;
+        if (board.getCell(row + 1, column - 1) == MinesweeperTile.FLAG) {
+          countFlags++;
+        } else {
+          Vector<Integer> v = new Vector<Integer>();
+          v.add(row + 1);
+          v.add(column - 1);
+          illegal.add(v);
+        }
+      } else if (board.getCell(row + 1, column - 1) == MinesweeperTile.FLAG) {
+        countFlags++;
+      }
+    }
+
+    if (!outOfBounds(row - 1, column + 1) ){
+      if (map.getCell(row - 1, column + 1) == MinesweeperTile.BOMB) {
+        countBombs++;
+        if (board.getCell(row - 1, column + 1) == MinesweeperTile.FLAG) {
+          countFlags++;
+        } else {
+          Vector<Integer> v = new Vector<Integer>();
+          v.add(row - 1);
+          v.add(column + 1);
+          illegal.add(v);
+        }
+      } else if (board.getCell(row - 1, column + 1) == MinesweeperTile.FLAG) {
+        countFlags++;
+      }
+    }
+
+    if (!outOfBounds(row + 1, column + 1) ){
+      if (map.getCell(row + 1, column + 1) == MinesweeperTile.BOMB) {
+        countBombs++;
+        if (board.getCell(row + 1, column + 1) == MinesweeperTile.FLAG) {
+          countFlags++;
+        } else {
+          Vector<Integer> v = new Vector<Integer>();
+          v.add(row + 1);
+          v.add(column + 1);
+          illegal.add(v);
+        }
+      } else if (board.getCell(row + 1, column + 1) == MinesweeperTile.FLAG) {
+        countFlags++;
+      }
+    }
+
+    if (countFlags < countBombs || countFlags > countBombs) {
+      return;
+    }
+
+    if (illegal.isEmpty()) {
+      uncoverAll(row, column);
+    } else {
+      for (Vector<Integer> v : illegal) {
+        board.setCell(v.firstElement(), v.lastElement(), MinesweeperTile.BOMBSELECTED);
+      }
+      gameOver = true;
+      gameOver();
+    }
+    notifyListeners(listener -> listener.updateBoard(board));
+  }
+
   private void uncover(int row, int column) {
     if (outOfBounds(row, column)) {
       return;
     }
 
-    if (board.getCell(row, column) != MinesweeperTile.CLOSED ||
-        board.getCell(row, column) == MinesweeperTile.FLAG ||
-        map.getCell(row, column) == MinesweeperTile.BOMB) {
+    if (board.getCell(row, column) != MinesweeperTile.CLOSED
+        || board.getCell(row, column) == MinesweeperTile.FLAG
+        || map.getCell(row, column) == MinesweeperTile.BOMB) {
       if (board.getCell(row, column) != MinesweeperTile.START) {
         return;
       }
@@ -147,15 +318,19 @@ public class MinesweeperService {
     MinesweeperTile tile = map.getCell(row, column);
     board.setCell(row, column, tile);
     if (tile == MinesweeperTile.OPEN) {
-      uncover(row - 1, column);
-      uncover(row + 1, column);
-      uncover(row, column - 1);
-      uncover(row, column + 1);
-      uncover(row - 1, column - 1);
-      uncover(row + 1, column - 1);
-      uncover(row - 1, column + 1);
-      uncover(row + 1, column + 1);
+      uncoverAll(row, column);
     }
+  }
+
+  private void uncoverAll(int row, int column) {
+    uncover(row - 1, column);
+    uncover(row + 1, column);
+    uncover(row, column - 1);
+    uncover(row, column + 1);
+    uncover(row - 1, column - 1);
+    uncover(row + 1, column - 1);
+    uncover(row - 1, column + 1);
+    uncover(row + 1, column + 1);
   }
 
   private void checkForWin() {
@@ -208,6 +383,12 @@ public class MinesweeperService {
     notifyListeners(listener -> listener.updateStatus(status));
   }
 
+  /**
+   * Flags a cell.
+   *
+   * @param row    The row of the cell.
+   * @param column The column of the cell.
+   */
   public void flag(int row, int column) {
     if (gameOver || gameWon || firstMove) {
       return;
