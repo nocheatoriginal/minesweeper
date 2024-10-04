@@ -338,16 +338,15 @@ public class MinesweeperService {
 
     for (int i = 0; i < board.getSize(); i++) {
       for (int j = 0; j < board.getSize(); j++) {
-        if (board.getCell(i, j) != MinesweeperTile.CLOSED) {
+        if (board.getCell(i, j) != MinesweeperTile.CLOSED
+        && board.getCell(i, j) != MinesweeperTile.FLAG) {
           countOpen++;
         }
       }
     }
 
     int fieldSize = MinesweeperConfig.MAP_SIZE * MinesweeperConfig.MAP_SIZE;
-    if (countFlags == MinesweeperConfig.BOMB_COUNT && countOpen == fieldSize) {
-      gameWon = true;
-    } else if (countOpen == fieldSize) {
+    if (countOpen == fieldSize - MinesweeperConfig.BOMB_COUNT) {
       gameWon = true;
     }
 
