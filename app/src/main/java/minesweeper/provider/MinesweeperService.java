@@ -85,6 +85,10 @@ public class MinesweeperService {
     return board;
   }
 
+  public MinesweeperBoard getMap() {
+    return map;
+  }
+
   public String getStatus() {
     return status;
   }
@@ -405,6 +409,7 @@ public class MinesweeperService {
       countFlags--;
     }
 
+    checkForWin();
     status = countFlags + "/" + MinesweeperConfig.BOMB_COUNT;
     notifyListeners(listener -> listener.updateStatus(status));
     notifyListeners(listener -> listener.updateBoard(board));

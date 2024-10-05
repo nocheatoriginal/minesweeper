@@ -3,7 +3,15 @@
 #### Use the gradle wrapper to make sure the application works properly!
 
 ```sh
-./gradlew clean build run
+# building the application ...
+./gradlew clean build
+./gradlew run
+```
+
+### Run the application in debug mode
+
+```sh
+./gradlew debug
 ```
 
 ### Generating and executing Jar-File

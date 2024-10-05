@@ -66,11 +66,9 @@ public class MinesweeperBoardFx extends Pane implements ChangeListener<Minesweep
    * Initialize the top bar.
    */
   private void initTopbar() {
-    Font minesweeperfont = Font.loadFont(getClass()
-        .getResourceAsStream("/fonts/mine-sweeper.ttf"), 20);
     status = new Label();
     status.textProperty().bindBidirectional(viewModel.statusProperty());
-    status.setFont(minesweeperfont);
+    status.setFont(MinesweeperConfig.FONT);
     status.setTextFill(MinesweeperConfig.STATUS_COLOR);
     topbar.getChildren().addAll(status);
     topbar.setAlignment(javafx.geometry.Pos.CENTER);

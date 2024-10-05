@@ -19,7 +19,7 @@ repositories {
 
 javafx {
     version = "21.0.1"
-    modules = [ "javafx.controls", "javafx.fxml" ]
+    modules = ["javafx.controls", "javafx.fxml"]
 }
 
 dependencies {
@@ -65,4 +65,17 @@ jar {
 shadowJar {
     archiveFileName = 'minesweeper.jar'
     mergeServiceFiles()
+}
+
+tasks.register('debug', JavaExec) {
+    //dependsOn('test')
+    description = 'Run the application in debug mode with DEBUG argument'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass.set('minesweeper.MinesweeperLauncher')
+    args = ['DEBUG']
+
+    jvmArgs = [
+            '--module-path', configurations.runtimeClasspath.asPath,
+            '--add-modules', 'javafx.controls'
+    ]
 }
