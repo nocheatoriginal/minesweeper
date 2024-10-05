@@ -19,6 +19,7 @@
 ```sh
 ./gradlew clean build shadowJar
 java --module-path $PATH_TO_FX --add-modules javafx.controls -jar app/build/libs/minesweeper.jar
+# for dubug mode, add the following argument at the end: "DEBUG"
 ```
 
 #### Code-Author: nocheatoriginal
