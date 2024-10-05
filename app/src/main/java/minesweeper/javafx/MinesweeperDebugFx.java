@@ -18,6 +18,7 @@ import minesweeper.provider.MinesweeperTile;
  */
 public class MinesweeperDebugFx extends Pane implements MinesweeperListener {
   private MinesweeperCellFx[][] cells;
+  private MinesweeperService service;
   private HBox topbar;
 
   /**
@@ -27,6 +28,8 @@ public class MinesweeperDebugFx extends Pane implements MinesweeperListener {
    */
   public MinesweeperDebugFx(final MinesweeperService service) {
     super();
+    service.addListener(this);
+    this.service = service;
 
     GridPane grid = new GridPane();
     this.cells = new MinesweeperCellFx[MinesweeperConfig.MAP_SIZE][MinesweeperConfig.MAP_SIZE];
@@ -40,7 +43,7 @@ public class MinesweeperDebugFx extends Pane implements MinesweeperListener {
     }
 
     Platform.runLater(() -> {
-      updateBoard(internalBoard);
+      updateMap(internalBoard);
     });
 
     initTopbar();
@@ -64,7 +67,8 @@ public class MinesweeperDebugFx extends Pane implements MinesweeperListener {
    *
    * @param newBoard ConnectFourBoard
    */
-  public void updateBoard(final MinesweeperBoard newBoard) {
+  public void updateMap(MinesweeperBoard newBoard) {
+    newBoard = service.getMap();
     for (int column = 0; column < newBoard.getSize(); column++) {
       for (int row = 0; row < newBoard.getSize(); row++) {
         MinesweeperTile tile = newBoard.getCell(row, column);
@@ -73,7 +77,11 @@ public class MinesweeperDebugFx extends Pane implements MinesweeperListener {
     }
   }
 
+  public void updateBoard(MinesweeperBoard board) {
+    // do nothing ...
+  }
+
   public void updateStatus(String status) {
-    // Do nothing
+    // do nothing ...
   }
 }

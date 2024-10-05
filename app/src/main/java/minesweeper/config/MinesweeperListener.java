@@ -9,4 +9,6 @@ public interface MinesweeperListener {
   void updateBoard(MinesweeperBoard board);
 
   void updateStatus(String status);
+
+  void updateMap(MinesweeperBoard board);
 }

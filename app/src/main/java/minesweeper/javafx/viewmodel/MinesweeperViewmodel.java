@@ -89,6 +89,11 @@ public class MinesweeperViewmodel implements MinesweeperListener {
     });
   }
 
+  @Override
+  public void updateMap(MinesweeperBoard board) {
+    // do nothing ...
+  }
+
   /**
    * Returns a new board.
    *

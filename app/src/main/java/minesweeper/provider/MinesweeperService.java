@@ -56,6 +56,7 @@ public class MinesweeperService {
         countFlagged + "/" + MinesweeperConfig.BOMB_COUNT;
     notifyListeners(listener -> listener.updateStatus(status));
     notifyListeners(listener -> listener.updateBoard(board));
+    notifyListeners(listener -> listener.updateMap(map));
   }
 
   /**
