@@ -190,7 +190,7 @@ class TestMinesweeperService {
     assertEquals(MinesweeperTile.CLOSED, board.getCell(emptyTile.firstElement(), emptyTile.lastElement()));
   }
 
-  @Test @Disabled
+  @Test
   void testWinConditionAndReset() {
     MinesweeperBoard board = service.getBoard();
     MinesweeperBoard map = service.getMap();

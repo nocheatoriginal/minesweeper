@@ -21,7 +21,7 @@ public class MinesweeperService {
   private boolean gameOver;
   private boolean gameWon;
   boolean firstMove;
-  private int countFlags;
+  private int countFlagged;
   private String status;
 
   public MinesweeperService() {
@@ -38,7 +38,7 @@ public class MinesweeperService {
     backup = new MinesweeperBoard();
     gameOver = false;
     gameWon = false;
-    countFlags = 0;
+    countFlagged = 0;
 
     firstMove = MinesweeperConfig.NO_GUESSING_MODE;
     boolean foundStart = !firstMove;
@@ -53,7 +53,7 @@ public class MinesweeperService {
       }
     }
     status = firstMove ? "Select the green X to start!" :
-        countFlags + "/" + MinesweeperConfig.BOMB_COUNT;
+        countFlagged + "/" + MinesweeperConfig.BOMB_COUNT;
     notifyListeners(listener -> listener.updateStatus(status));
     notifyListeners(listener -> listener.updateBoard(board));
   }
@@ -128,7 +128,7 @@ public class MinesweeperService {
       return;
     }
 
-    status = countFlags + "/" + MinesweeperConfig.BOMB_COUNT;
+    status = countFlagged + "/" + MinesweeperConfig.BOMB_COUNT;
     MinesweeperTile openTile = map.getCell(row, column);
     switch (openTile) {
       case BOMB:
@@ -303,6 +303,7 @@ public class MinesweeperService {
       gameOver = true;
       gameOver();
     }
+    checkForWin();
     notifyListeners(listener -> listener.updateBoard(board));
   }
 
@@ -324,6 +325,7 @@ public class MinesweeperService {
     if (tile == MinesweeperTile.OPEN) {
       uncoverAll(row, column);
     }
+    checkForWin();
   }
 
   private void uncoverAll(int row, int column) {
@@ -338,6 +340,10 @@ public class MinesweeperService {
   }
 
   private void checkForWin() {
+    if (gameOver) {
+      return;
+    }
+
     int countOpen = 0;
 
     for (int i = 0; i < board.getSize(); i++) {
@@ -398,19 +404,19 @@ public class MinesweeperService {
     }
 
     if (board.getCell(row, column) == MinesweeperTile.CLOSED) {
-      if (countFlags >= MinesweeperConfig.BOMB_COUNT) {
+      if (countFlagged >= MinesweeperConfig.BOMB_COUNT) {
         return;
       }
       board.setCell(row, column, MinesweeperTile.FLAG);
-      countFlags++;
+      countFlagged++;
     } else if (board.getCell(row, column) == MinesweeperTile.FLAG) {
       MinesweeperTile b = backup.getCell(row, column);
       board.setCell(row, column, b);
-      countFlags--;
+      countFlagged--;
     }
 
     checkForWin();
-    status = countFlags + "/" + MinesweeperConfig.BOMB_COUNT;
+    status = countFlagged + "/" + MinesweeperConfig.BOMB_COUNT;
     notifyListeners(listener -> listener.updateStatus(status));
     notifyListeners(listener -> listener.updateBoard(board));
   }
