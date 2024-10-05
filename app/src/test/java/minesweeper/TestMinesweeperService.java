@@ -161,7 +161,8 @@ class TestMinesweeperService {
     service.open(startTile.firstElement(), startTile.lastElement());
     service.open(bombTile.firstElement(), bombTile.lastElement());
     Vector<Integer> emptyTile = findTile(map, MinesweeperTile.OPEN);
-    assert emptyTile != null;
+    assertNotNull(emptyTile);
+
     while (board.getCell(emptyTile.firstElement(), emptyTile.lastElement()) != MinesweeperTile.CLOSED) {
       emptyTile = findTile(map, MinesweeperTile.OPEN);
     }
@@ -176,18 +177,20 @@ class TestMinesweeperService {
     MinesweeperBoard map = service.getMap();
     Vector<Integer> startTile = findTile(board, MinesweeperTile.START);
     assertNotNull(startTile);
-    Vector<Integer> emptyTile = findTile(map, MinesweeperTile.OPEN);
-    assertNotNull(emptyTile);
     Vector<Integer> bombTile = findTile(map, MinesweeperTile.BOMB);
     assertNotNull(bombTile);
 
     service.open(startTile.firstElement(), startTile.lastElement());
     service.open(bombTile.firstElement(), bombTile.lastElement());
-    service.open(emptyTile.firstElement(), emptyTile.lastElement());
+    Vector<Integer> closedTile = findTile(board, MinesweeperTile.CLOSED);
+    assertNotNull(closedTile);
+
+    while (board.getCell(closedTile.firstElement(), closedTile.lastElement()) != MinesweeperTile.CLOSED) {
+      closedTile = findTile(map, MinesweeperTile.CLOSED);
+    }
+    service.flag(closedTile.firstElement(), closedTile.lastElement());
     assertEquals(MinesweeperTile.BOMBSELECTED, board.getCell(bombTile.firstElement(), bombTile.lastElement()));
-    assertEquals(MinesweeperTile.CLOSED, board.getCell(emptyTile.firstElement(), emptyTile.lastElement()));
-    service.flag(emptyTile.firstElement(), emptyTile.lastElement());
-    assertEquals(MinesweeperTile.CLOSED, board.getCell(emptyTile.firstElement(), emptyTile.lastElement()));
+    assertEquals(MinesweeperTile.CLOSED, board.getCell(closedTile.firstElement(), closedTile.lastElement()));
   }
 
   @Test
