@@ -5,6 +5,20 @@
  * For more detailed information on multi-project builds, please refer to https://docs.gradle.org/8.3/userguide/building_swift_projects.html in the Gradle documentation.
  */
 
+buildscript {
+    repositories {
+        gradlePluginPortal()
+        maven {
+            url "https://sandec.jfrog.io/artifactory/repo"
+        }
+    }
+
+    dependencies {
+        classpath "one.jpro:jpro-gradle-plugin:2024.3.3"
+    }
+}
+
+
 plugins {
     // Apply the foojay-resolver plugin to allow automatic download of JDKs
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.4.0'

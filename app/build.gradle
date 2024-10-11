@@ -10,6 +10,7 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.13'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'jpro-gradle-plugin'
 }
 
 repositories {
@@ -115,4 +116,9 @@ tasks.withType(Test) {
             }
         }
     }
+}
+
+jpro {
+    // jpro server port
+    port = 4000
 }

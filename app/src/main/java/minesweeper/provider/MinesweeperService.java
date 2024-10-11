@@ -116,12 +116,13 @@ public class MinesweeperService {
       }
     }
 
-    if (gameWon) {
-      if (board.getCell(row, column) == MinesweeperTile.FLAG) {
+    if (board.getCell(row, column) == MinesweeperTile.FLAG) {
+      if (gameWon) {
         reset();
       }
       return;
     }
+
 
     if (board.getCell(row, column) != MinesweeperTile.CLOSED
         && board.getCell(row, column) != MinesweeperTile.START) {
