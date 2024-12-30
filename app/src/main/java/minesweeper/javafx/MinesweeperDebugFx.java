@@ -65,7 +65,7 @@ public class MinesweeperDebugFx extends Pane implements MinesweeperListener {
   /**
    * Update the cells.
    *
-   * @param newBoard ConnectFourBoard
+   * @param newBoard MinesweeperBoard
    */
   public void updateMap(MinesweeperBoard newBoard) {
     newBoard = service.getMap();

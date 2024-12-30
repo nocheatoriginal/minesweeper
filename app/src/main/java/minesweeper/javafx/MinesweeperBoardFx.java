@@ -96,7 +96,7 @@ public class MinesweeperBoardFx extends Pane implements ChangeListener<Minesweep
   /**
    * Update the cells.
    *
-   * @param newBoard ConnectFourBoard
+   * @param newBoard MinesweeperBoard
    */
   private void updateBoard(final MinesweeperBoard newBoard) {
     for (int column = 0; column < newBoard.getSize(); column++) {
