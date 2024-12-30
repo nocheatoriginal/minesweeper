@@ -1,6 +1,6 @@
 # Minesweeper
 
-![Alt-Text](app/src/main/resources/sprites/minimize.png)
+![minesweeper](app/src/main/resources/sprites/minimize.png)
 
 ### Build and Run
 
