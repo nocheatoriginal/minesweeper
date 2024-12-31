@@ -5,7 +5,6 @@ import minesweeper.provider.MinesweeperBoard;
 import minesweeper.provider.MinesweeperService;
 import minesweeper.provider.MinesweeperTile;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Vector;
