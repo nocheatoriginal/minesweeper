@@ -1,6 +1,6 @@
 # Minesweeper
 
-![minesweeper](app/src/main/resources/sprites/minimize.png)
+![minesweeper](app/src/main/resources/preview.png)
 
 ### Build and Run
 
@@ -26,4 +26,5 @@ java --module-path $PATH_TO_FX --add-modules javafx.controls -jar app/build/libs
 # for debug mode, add the following argument at the end: "DEBUG"
 ```
 
-#### Code-Author: nocheatoriginal
+#### Author: 
+[nocheatoriginal](https://github.com/nocheatoriginal)
